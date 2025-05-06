@@ -1,7 +1,5 @@
 #include "s21_graph.h"
 
-#include <iostream>
-
 using namespace std;
 
 void Graph::Clear() {

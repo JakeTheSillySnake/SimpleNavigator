@@ -28,7 +28,7 @@ valgrind:
 	valgrind ./test.out --leak-check=full -s
 
 clang:
-	clang-format-18 -i *cpp *h tests/*cpp
+	clang-format-18 -i *cpp *h tests/*cpp containers/*h
 
 clean:
 	rm -rf *.o *.a *.gcno *.gcda *.info *.out *.gcov *.gch *.dSYM report *dot

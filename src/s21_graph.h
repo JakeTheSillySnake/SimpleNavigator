@@ -2,6 +2,7 @@
 #define GRAPH_H
 
 #include <fstream>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -9,11 +10,10 @@ using namespace std;
 enum Errors { NO_FILE = 1, BAD_FORMAT, BAD_DATA };
 
 class Graph {
- private:
+ public:
   int **matrix = nullptr;
   int size = 0;
 
- public:
   Graph() { Graph(0); }
   Graph(int n) { Init(n); }
   ~Graph() { Clear(); }
