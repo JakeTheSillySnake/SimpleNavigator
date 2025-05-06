@@ -29,8 +29,8 @@ int main() {
 }
 
 void beginLoop(Graph &graph) {
-    int res = -1;
-    while (1) {
+  int res = -1;
+  while (1) {
     cout << "\033[2J\033[1;1H";
     cout << "Choose action:" << endl << endl;
     cout << "1. Import new graph" << endl;
@@ -146,16 +146,16 @@ void shortestPath(Graph &graph) {
 }
 
 void mst(Graph &graph) {
-    GraphAlgorithms alg;
-    vector<vector<int>> res = alg.GetLeastSpanninhTree(graph);
-    for (int i = 0; i < graph.size; i++) {
+  GraphAlgorithms alg;
+  vector<vector<int>> res = alg.GetLeastSpanninhTree(graph);
+  for (int i = 0; i < graph.size; i++) {
     for (int j = 0; j < graph.size; j++) {
       cout << res[i][j] << " ";
     }
     cout << endl;
-    }
-    cout << endl;
-    cont();
+  }
+  cout << endl;
+  cont();
 }
 
 void cont() {

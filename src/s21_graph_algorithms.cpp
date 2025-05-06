@@ -84,31 +84,32 @@ int GraphAlgorithms::GetMinDistance(vector<int> dist, vector<bool> visited) {
 }
 
 vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
-    vector<bool> visited(graph.size, false);
-    vector<int> dist(graph.size, INT_MAX);
-    vector<int> parentNodes(graph.size);
-    dist[0] = 0;
-    parentNodes[0] = -1;
-    for (int cnt = 0; cnt < graph.size - 1; cnt++) {
-        int n = GetMinDistance(dist, visited);
-        visited[n] = true;
-        for (int i = 0; i < graph.size; i++) {
-            if (graph.matrix[n][i] && !visited[i] && graph.matrix[n][i] < dist[i])
-                parentNodes[i] = n, dist[i] = graph.matrix[n][i];
-        }
+  vector<bool> visited(graph.size, false);
+  vector<int> dist(graph.size, INT_MAX);
+  vector<int> parentNodes(graph.size);
+  dist[0] = 0;
+  parentNodes[0] = -1;
+  for (int cnt = 0; cnt < graph.size - 1; cnt++) {
+    int n = GetMinDistance(dist, visited);
+    visited[n] = true;
+    for (int i = 0; i < graph.size; i++) {
+      if (graph.matrix[n][i] && !visited[i] && graph.matrix[n][i] < dist[i])
+        parentNodes[i] = n, dist[i] = graph.matrix[n][i];
     }
-    vector<vector<int>> res(parentNodes.size(), vector<int>(parentNodes.size()));
-    for (int i = 1; i < graph.size; i++) {
-        res[parentNodes[i]][i] = graph.matrix[parentNodes[i]][i];
-        res[i][parentNodes[i]] = graph.matrix[i][parentNodes[i]];
-    }
-    return res;
+  }
+  vector<vector<int>> res(parentNodes.size(), vector<int>(parentNodes.size()));
+  for (int i = 1; i < graph.size; i++) {
+    res[parentNodes[i]][i] = graph.matrix[parentNodes[i]][i];
+    res[i][parentNodes[i]] = graph.matrix[i][parentNodes[i]];
+  }
+  return res;
 }
 
-GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(Graph &graph) {
-    TsmResult res;
-    res.vertices = new int[graph.size];
-    res.distance = 0;
-    // tsm solution
-    return res;
+GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
+    Graph &graph) {
+  TsmResult res;
+  res.vertices = new int[graph.size];
+  res.distance = 0;
+  // tsm solution
+  return res;
 }
