@@ -39,8 +39,8 @@ int main() {
   beginLoop(graph);
 
   // testing
-  //graph.LoadGraphFromFile("assets/graph_uw.txt");
-  //tsp(graph);
+  // graph.LoadGraphFromFile("assets/graph_uw.txt");
+  // tsp(graph);
 
   cout << "\033[2J\033[1;1H";
   return 0;
