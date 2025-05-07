@@ -3,8 +3,8 @@
 using namespace std;
 
 void Graph::Clear() {
-  for (int i = 0; i < size; i++) delete matrix[i];
-  delete matrix;
+  for (int i = 0; i < size; i++) delete[] matrix[i];
+  delete[] matrix;
 }
 
 void Graph::Init(int n) {
@@ -20,10 +20,10 @@ int Graph::LoadGraphFromFile(string filename) {
   int size;
   input >> size;
   if (input.fail())
-    error = BAD_FORMAT;
+    return BAD_FORMAT;
   else if (size < 2)
-    error = BAD_DATA;
-  if (!error) Init(size);
+    return BAD_DATA;
+  Init(size);
   for (int i = 0; i < size && !error; i++) {
     for (int j = 0; j < size && !error; j++) {
       input >> matrix[i][j];

@@ -107,9 +107,129 @@ vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
 
 GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
     Graph &graph) {
+  Q *= graph.size;
+  vector<vector<double>> pheromones(graph.size,
+                                    vector<double>(graph.size, initPheromone));
+  vector<vector<double>> deltaPheromones(graph.size,
+                                         vector<double>(graph.size, 0));
+  vector<int> bestPath(graph.size, 0);
+  int minLen = INT_MAX;
+
+  for (int i = 0; i < cycles; i++) {
+    for (int ant = 0; ant < graph.size; ant++) {
+      vector<bool> visited(graph.size, false);
+      int curr = ant;
+      visited[curr] = true;
+      vector<int> path;
+      path.push_back(curr);
+
+      while ((int)path.size() < graph.size) {
+        vector<double> probabilities =
+            GetNeigbourProbabilities(graph, pheromones, curr, visited);
+        int next = GetNextVertex(probabilities);
+        visited[next] = true;
+        path.push_back(next);
+        curr = next;
+      }
+      path.push_back(path[0]);
+      int len = GetPathLength(graph, path);
+      if (len < minLen) {
+        minLen = len;
+        bestPath = path;
+      }
+      deltaPheromones = UpdateDeltaPheromones(deltaPheromones, path, len);
+    }
+    pheromones = AddNewTrails(EvaporatePheromones(pheromones), deltaPheromones);
+  }
+
   TsmResult res;
-  res.vertices = new int[graph.size];
-  res.distance = 0;
-  // tsm solution
+  res.distance = (minLen != INT_MAX ? minLen : -1);
+  if (res.distance != -1) res.vertices = ShiftPath(bestPath);
+  return res;
+}
+
+vector<double> GraphAlgorithms::GetNeigbourProbabilities(
+    Graph &graph, vector<vector<double>> pheromones, int curr,
+    vector<bool> visited) {
+  vector<double> probabilities(graph.size, 0);
+  double sum = 0;
+  for (int i = 0; i < graph.size; i++) {
+    if (!visited[i]) {
+      probabilities[i] = pow(pheromones[curr][i], alpha) *
+                         pow(1.0 / graph.matrix[curr][i], beta);
+      sum += probabilities[i];
+    }
+  }
+  if (sum)
+    for (int i = 0; i < graph.size; i++) probabilities[i] /= sum;
+  return probabilities;
+}
+
+vector<vector<double>> GraphAlgorithms::AddNewTrails(
+    vector<vector<double>> pheromones, vector<vector<double>> deltaPheromones) {
+  int n = pheromones.size();
+  for (int i = 0; i < n; i++)
+    for (int j = 0; j < n; j++)
+      pheromones[i][j] += deltaPheromones[i][j] * evaporation;
+  return pheromones;
+}
+
+vector<vector<double>> GraphAlgorithms::EvaporatePheromones(
+    vector<vector<double>> pheromones) {
+  int n = pheromones.size();
+  for (int i = 0; i < n; i++)
+    for (int j = 0; j < n; j++) pheromones[i][j] *= (1 - evaporation);
+  return pheromones;
+}
+
+vector<vector<double>> GraphAlgorithms::UpdateDeltaPheromones(
+    vector<vector<double>> deltaPheromones, vector<int> path, int len) {
+  int n = path.size();
+  for (int i = 0; i < n - 1; i++) {
+    int from = path[i], to = path[i + 1];
+    deltaPheromones[from][to] += Q / len;
+  }
+  return deltaPheromones;
+}
+
+int GraphAlgorithms::GetNextVertex(vector<double> probabilites) {
+  double sum = 0;
+  int n = probabilites.size();
+  double begin[n], end[n];
+  for (int i = 0; i < n; i++) sum += evaporation;
+
+  double curr = 0;
+  for (int i = 0; i < n; i++) {
+    begin[i] = curr;
+    end[i] = curr + probabilites[i] / sum;
+    curr = end[i];
+  }
+
+  uniform_real_distribution<double> unif(0.0, 1.0);
+  default_random_engine re;
+  double choice = unif(re);
+
+  for (int i = 0; i < n; i++)
+    if (begin[i] <= choice && end[i] >= choice) return i;
+  return n - 1;
+}
+
+int GraphAlgorithms::GetPathLength(Graph &graph, vector<int> path) {
+  int len = 0;
+  int n = path.size();
+  for (int i = 0; i < n - 1; i++) {
+    int from = path[i], to = path[i + 1];
+    len += graph.matrix[from][to];
+  }
+  len += graph.matrix[path[n - 1]][path[0]];
+  return len;
+}
+
+vector<int> GraphAlgorithms::ShiftPath(vector<int> path) {
+  int curr = path[0], idx = 0, n = path.size();
+  vector<int> res;
+  while (curr != 0) curr = path[++idx];
+  for (int i = idx; i > 0; i--) res.push_back(path[i]);
+  for (int i = n - 1; i >= idx; i--) res.push_back(path[i]);
   return res;
 }
