@@ -14,7 +14,6 @@ enum Action {
   PATH,
   MST,
   TSP,
-  TSP_COMPARE,
   EXIT
 };
 
@@ -27,7 +26,6 @@ void pathBetweenPoints(Graph &graph);
 void shortestPath(Graph &graph);
 void mst(Graph &graph);
 void tsp(Graph &graph);
-void tsp_compare(Graph &graph);
 void cont();
 
 int main() {
@@ -37,11 +35,6 @@ int main() {
   Graph graph;
   importGraph(graph);
   beginLoop(graph);
-
-  // testing
-  // graph.LoadGraphFromFile("assets/graph_uw.txt");
-  // tsp(graph);
-
   cout << "\033[2J\033[1;1H";
   return 0;
 }
@@ -59,8 +52,7 @@ void beginLoop(Graph &graph) {
     cout << "6. Shortest path between all vertices" << endl;
     cout << "7. Get least spanning tree" << endl;
     cout << "8. Solve traveling salesman problem (ant colony method)" << endl;
-    cout << "9. Solve traveling salesman problem (compare algorithms)" << endl;
-    cout << "10. Exit" << endl;
+    cout << "9. Exit" << endl;
     cin >> res;
     if (res == IMPORT)
       importGraph(graph);
@@ -78,8 +70,6 @@ void beginLoop(Graph &graph) {
       mst(graph);
     else if (res == TSP)
       tsp(graph);
-    else if (res == TSP_COMPARE)
-      tsp_compare(graph);
     else if (res == EXIT)
       break;
   }
@@ -124,7 +114,7 @@ void dfs(Graph &graph) {
     cin >> res;
   } while (res < min || res > max);
   vector<int> path = alg.DepthFirstSearch(graph, res - 1);
-  for (int i = 0; i < (int)path.size(); i++) cout << path[i] << " ";
+  for (int i = 0; i < (int)path.size(); i++) cout << path[i] + 1 << " ";
   cout << endl;
   cont();
 }
@@ -137,7 +127,7 @@ void bfs(Graph &graph) {
     cin >> res;
   } while (res < min || res > max);
   vector<int> path = alg.BreadthFirstSearch(graph, res - 1);
-  for (int i = 0; i < (int)path.size(); i++) cout << path[i] << " ";
+  for (int i = 0; i < (int)path.size(); i++) cout << path[i] + 1 << " ";
   cout << endl;
   cont();
 }
@@ -192,37 +182,6 @@ void tsp(Graph &graph) {
     }
     cout << endl << "Route length: " << res.distance << endl;
   }
-  cont();
-}
-
-void tsp_compare(Graph &graph) {
-  GraphAlgorithms alg;
-  int cycles;
-  cout << "Times to solve: ";
-  cin >> cycles;
-  auto start = high_resolution_clock::now();
-  for (int i = 0; i < cycles; i++) {
-    auto res = alg.SolveTravelingSalesmanProblem(graph);
-    if (res.distance == -1) {
-      cout << "No solution found" << endl;
-      return;
-    }
-  }
-  auto stop = high_resolution_clock::now();
-  auto duration = duration_cast<milliseconds>(stop - start);
-  cout << "Ant colony method: " << duration.count() << endl;
-
-  start = high_resolution_clock::now();
-  for (int i = 0; i < cycles; i++) alg.SolveTravelingSalesmanProblem(graph);
-  stop = high_resolution_clock::now();
-  duration = duration_cast<milliseconds>(stop - start);
-  cout << "2nd method: " << duration.count() << endl;
-
-  start = high_resolution_clock::now();
-  for (int i = 0; i < cycles; i++) alg.SolveTravelingSalesmanProblem(graph);
-  stop = high_resolution_clock::now();
-  duration = duration_cast<milliseconds>(stop - start);
-  cout << "3rd method: " << duration.count() << endl;
   cont();
 }
 

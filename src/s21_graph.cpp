@@ -4,7 +4,8 @@ using namespace std;
 
 void Graph::Clear() {
   for (int i = 0; i < size; i++) delete[] matrix[i];
-  delete[] matrix;
+  if (matrix != nullptr) delete[] matrix;
+  size = 0;
 }
 
 void Graph::Init(int n) {
@@ -14,6 +15,7 @@ void Graph::Init(int n) {
 }
 
 int Graph::LoadGraphFromFile(string filename) {
+  Clear();
   int error = 0;
   ifstream input(filename);
   if (!input.is_open()) return NO_FILE;

@@ -9,7 +9,7 @@ vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph, int start_vertex) {
     int n = stack.Top();
     stack.Pop();
     if (!visited[n]) {
-      res.push_back(n + 1);
+      res.push_back(n);
       visited[n] = true;
       for (int i = 0; i < graph.size; i++) {
         if (graph.matrix[n][i] && !visited[i]) stack.Push(i);
@@ -29,7 +29,7 @@ vector<int> GraphAlgorithms::BreadthFirstSearch(Graph &graph,
     int n = queue.Front();
     queue.Pop();
     if (!visited[n]) {
-      res.push_back(n + 1);
+      res.push_back(n);
       visited[n] = true;
       for (int i = 0; i < graph.size; i++) {
         if (graph.matrix[n][i] && !visited[i]) queue.Push(i);
@@ -98,9 +98,10 @@ vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
     }
   }
   vector<vector<int>> res(parentNodes.size(), vector<int>(parentNodes.size()));
+  bool undir = graph.IsUndirected();
   for (int i = 1; i < graph.size; i++) {
     res[parentNodes[i]][i] = graph.matrix[parentNodes[i]][i];
-    res[i][parentNodes[i]] = graph.matrix[i][parentNodes[i]];
+    if (undir) res[i][parentNodes[i]] = graph.matrix[i][parentNodes[i]];
   }
   return res;
 }

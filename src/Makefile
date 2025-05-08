@@ -1,9 +1,15 @@
-.PHONY: all clean clang test s21_graph s21_graph_algorithms gcov_report valgrind
+.PHONY: all clean clang test s21_graph s21_graph_algorithms gcov_report valgrind install uninstall
 
 FLAGS = g++ -Wall -Wextra -Werror -std=c++20
 LIBS = -lgtest -lpthread -lstdc++ -L. -ls21_graph -ls21_graph_algorithms
 
 all: clean s21_graph s21_graph_algorithms test gcov_report
+
+install: clean s21_graph s21_graph_algorithms
+	$(FLAGS) main.cpp $(LIBS) -o app
+
+uninstall: clean
+	rm -rf app
 
 s21_graph: s21_graph.cpp
 	$(FLAGS) -c s21_graph.cpp -o s21_graph.o
@@ -39,5 +45,5 @@ clang:
 	clang-format-18 -i *cpp *h tests/*cpp containers/*h
 
 clean:
-	rm -rf *.o *.a *.gcno *.gcda *.info *.out *.gcov *.gch *.dSYM report
+	rm -rf *.o *.a *.gcno *.gcda *.info *.out *.gcov *.gch *.dSYM report test.dot app
 	@echo -e "\nAll clean!\n"
