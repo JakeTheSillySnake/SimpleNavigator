@@ -53,5 +53,5 @@ clang:
 	clang-format-18 -i *cpp *h tests/*cpp containers/*h
 
 clean:
-	rm -rf *.o *.a *.gcno *.gcda *.info *.out *.gcov *.gch *.dSYM report test.dot app
+	rm -rf *.o *.a *.gcno *.gcda *.info *.out *.gcov *.gch *.dSYM report test.dot
 	@echo -e "\nAll clean!\n"

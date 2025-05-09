@@ -49,9 +49,10 @@ int Graph::LoadGraphFromFile(string filename) {
 int Graph::ExportGraphToDot(string filename) {
   ofstream output(filename);
   if (!output.is_open()) return NO_FILE;
+  bool undirected = IsUndirected();
+  if (!undirected) output << "di";
   output << "graph newgraph {" << endl;
   string path = "--";
-  bool undirected = IsUndirected();
   if (!undirected) path = "->";
   char outerNode = 'a';
   int outerRound = 1;
