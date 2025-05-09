@@ -11,7 +11,7 @@ vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph, int start_vertex) {
     if (!visited[n]) {
       res.push_back(n);
       visited[n] = true;
-      for (int i = 0; i < graph.size; i++) {
+      for (int i = graph.size - 1; i >= 0; i--) {
         if (graph.matrix[n][i] && !visited[i]) stack.Push(i);
       }
     }
@@ -144,7 +144,7 @@ GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
   }
 
   TsmResult res;
-  res.distance = (minLen != INT_MAX ? minLen : -1);
+  res.distance = (minLen != INT_MAX && minLen ? minLen : -1);
   if (res.distance != -1) res.vertices = ShiftPath(bestPath);
   return res;
 }

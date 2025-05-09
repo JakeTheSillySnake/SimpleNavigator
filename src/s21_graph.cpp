@@ -4,7 +4,7 @@ using namespace std;
 
 void Graph::Clear() {
   for (int i = 0; i < size; i++) delete[] matrix[i];
-  if (matrix != nullptr) delete[] matrix;
+  if (size) delete[] matrix;
   size = 0;
 }
 
@@ -19,26 +19,30 @@ int Graph::LoadGraphFromFile(string filename) {
   int error = 0;
   ifstream input(filename);
   if (!input.is_open()) return NO_FILE;
-  int size;
-  input >> size;
+  int n;
+  input >> n;
   if (input.fail())
     return BAD_FORMAT;
-  else if (size < 2)
-    return BAD_DATA;
-  Init(size);
-  for (int i = 0; i < size && !error; i++) {
-    bool connected = false;
-    for (int j = 0; j < size && !error; j++) {
+  else if (n < 2)
+    return BAD_SIZE;
+  Init(n);
+  for (int i = 0; i < n && !error; i++) {
+    for (int j = 0; j < n && !error; j++) {
       input >> matrix[i][j];
       if (input.fail())
         error = BAD_FORMAT;
       else if (matrix[i][j] < 0)
         error = BAD_DATA;
-      if (!error && matrix[i][j]) connected = true;
     }
-    if (!connected && !error) error = BAD_DATA;
   }
   input.close();
+  for (int i = 0; i < n && !error; i++) {
+    bool connected = false;
+    for (int j = 0; j < n && !error; j++) {
+      if (EdgeExists(i, j)) connected = true;
+    }
+    if (!connected) error = DISCONNECTED;
+  }
   return error;
 }
 
@@ -76,6 +80,11 @@ int Graph::ExportGraphToDot(string filename) {
   output << "}";
   output.close();
   return 0;
+}
+
+bool Graph::EdgeExists(int a, int b) {
+  if (matrix[a][b] || matrix[b][a]) return true;
+  return false;
 }
 
 bool Graph::IsUndirected() {

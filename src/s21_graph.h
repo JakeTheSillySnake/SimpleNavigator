@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum Errors { NO_FILE = 1, BAD_FORMAT, BAD_DATA };
+enum Errors { NO_FILE = 1, BAD_SIZE, BAD_FORMAT, BAD_DATA, DISCONNECTED };
 
 class Graph {
  public:
@@ -19,6 +19,7 @@ class Graph {
   ~Graph() { Clear(); }
   int LoadGraphFromFile(string filename);
   int ExportGraphToDot(string filename);
+  bool EdgeExists(int a, int b);
   bool IsUndirected();
   void Init(int n);
   void Clear();

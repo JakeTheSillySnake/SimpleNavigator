@@ -11,7 +11,7 @@ TEST(test_Graph, upload_1) {
 TEST(test_Graph, upload_2) {
   Graph graph;
   int res = graph.LoadGraphFromFile("assets/bad1.txt");
-  ASSERT_TRUE(res == BAD_DATA);
+  ASSERT_TRUE(res == BAD_SIZE);
 }
 
 TEST(test_Graph, upload_3) {
@@ -39,6 +39,12 @@ TEST(test_Graph, upload_6) {
 }
 
 TEST(test_Graph, upload_7) {
+  Graph graph;
+  int res = graph.LoadGraphFromFile("assets/disconnected.txt");
+  ASSERT_TRUE(res == DISCONNECTED);
+}
+
+TEST(test_Graph, upload_8) {
   Graph graph;
   int res = graph.LoadGraphFromFile("assets/graph_uu.txt");
   graph.Print();

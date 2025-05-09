@@ -83,15 +83,15 @@ void importGraph(Graph &graph) {
     cin >> in;
     res = graph.LoadGraphFromFile(in);
     if (res == NO_FILE)
-      cout << "Couldn't open file." << endl;
+      cout << "Error: couldn't open file." << endl;
+    else if (res == BAD_SIZE)
+      cout << "Error: graph must have at least 2 nodes." << endl;
     else if (res == BAD_FORMAT)
-      cout << "Couldn't read from file: bad format.\nCheck that file contains "
-              "integers only."
-           << endl;
+      cout << "Error: bad format. File empty or has non-integers." << endl;
     else if (res == BAD_DATA)
-      cout << "Couldn't read from file: data out of range.\nCheck that all "
-              "edges are >= 0 and graph isn't null or disconnected."
-           << endl;
+      cout << "Error: data out of range. Edges must be >= 0." << endl;
+    else if (res == DISCONNECTED)
+      cout << "Error: graph is null or disconnected." << endl;
   } while (res != 0);
   graph.Print();
   cout << "Graph successfully uploaded." << endl;
@@ -178,7 +178,7 @@ void tsp(Graph &graph) {
   GraphAlgorithms alg;
   auto res = alg.SolveTravelingSalesmanProblem(graph);
   if (res.distance == -1)
-    cout << "No solution found" << endl;
+    cout << "No solution found." << endl;
   else {
     cout << "Traversing sequence: ";
     for (auto i : res.vertices) {
