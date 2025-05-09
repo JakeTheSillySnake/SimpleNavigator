@@ -85,9 +85,13 @@ void importGraph(Graph &graph) {
     if (res == NO_FILE)
       cout << "Couldn't open file." << endl;
     else if (res == BAD_FORMAT)
-      cout << "Couldn't read from file: bad format." << endl;
+      cout << "Couldn't read from file: bad format.\nCheck that file contains "
+              "integers only."
+           << endl;
     else if (res == BAD_DATA)
-      cout << "Couldn't read from file: data out of range." << endl;
+      cout << "Couldn't read from file: data out of range.\nCheck that all "
+              "edges are >= 0 and graph isn't null or disconnected."
+           << endl;
   } while (res != 0);
   graph.Print();
   cout << "Graph successfully uploaded." << endl;

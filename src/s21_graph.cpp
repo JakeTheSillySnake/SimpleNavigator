@@ -27,13 +27,16 @@ int Graph::LoadGraphFromFile(string filename) {
     return BAD_DATA;
   Init(size);
   for (int i = 0; i < size && !error; i++) {
+    bool connected = false;
     for (int j = 0; j < size && !error; j++) {
       input >> matrix[i][j];
       if (input.fail())
         error = BAD_FORMAT;
       else if (matrix[i][j] < 0)
         error = BAD_DATA;
+      if (!error && matrix[i][j]) connected = true;
     }
+    if (!connected && !error) error = BAD_DATA;
   }
   input.close();
   return error;
