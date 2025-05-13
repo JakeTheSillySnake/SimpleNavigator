@@ -79,7 +79,7 @@ TEST(test_GraphAlgorithms, mst) {
   ASSERT_TRUE(res == compare);
 }
 
-TEST(test_GraphAlgorithms, tsp) {
+TEST(test_GraphAlgorithms, tsp_ant) {
   Graph graph;
   GraphAlgorithms algo;
   graph.LoadGraphFromFile("assets/graph_uw.txt");
@@ -94,5 +94,29 @@ TEST(test_GraphAlgorithms, tsp) {
 
   graph.LoadGraphFromFile("assets/graph_dw.txt");
   res = algo.SolveTravelingSalesmanProblem(graph);
+  ASSERT_TRUE(res.distance == -1);
+}
+
+TEST(test_GraphAlgorithms, tsp_brute) {
+  Graph graph;
+  GraphAlgorithms algo;
+  graph.LoadGraphFromFile("assets/graph_uw.txt");
+  auto res = algo.BruteForceAlgorithm(graph);
+  vector<int> compare = {0, 7, 4, 3, 9, 5, 2, 6, 1, 10, 8, 0};
+  ASSERT_TRUE(res.vertices == compare);
+  ASSERT_TRUE(res.distance == 253);
+}
+
+TEST(test_GraphAlgorithms, tsp_branch) {
+  Graph graph;
+  GraphAlgorithms algo;
+  graph.LoadGraphFromFile("assets/graph_uw.txt");
+  auto res = algo.BranchAndBoundAlgorithm(graph);
+  vector<int> compare = {0, 7, 4, 3, 9, 5, 2, 6, 1, 10, 8, 0};
+  ASSERT_TRUE(res.vertices == compare);
+  ASSERT_TRUE(res.distance == 253);
+
+  graph.LoadGraphFromFile("assets/graph_uw2.txt");
+  res = algo.BranchAndBoundAlgorithm(graph);
   ASSERT_TRUE(res.distance == -1);
 }
