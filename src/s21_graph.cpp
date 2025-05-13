@@ -9,7 +9,7 @@ void Graph::Clear() {
 }
 
 void Graph::Init(int n) {
-  matrix = new int*[n];
+  matrix = new int *[n];
   for (int i = 0; i < n; i++) matrix[i] = new int[n];
   size = n;
 }
@@ -36,13 +36,7 @@ int Graph::LoadGraphFromFile(string filename) {
     }
   }
   input.close();
-  for (int i = 0; i < n && !error; i++) {
-    bool connected = false;
-    for (int j = 0; j < n && !error; j++) {
-      if (EdgeExists(i, j)) connected = true;
-    }
-    if (!connected) error = DISCONNECTED;
-  }
+  if (!CheckConnected()) error = DISCONNECTED;
   return error;
 }
 
@@ -83,11 +77,6 @@ int Graph::ExportGraphToDot(string filename) {
   return 0;
 }
 
-bool Graph::EdgeExists(int a, int b) {
-  if (matrix[a][b] || matrix[b][a]) return true;
-  return false;
-}
-
 bool Graph::IsUndirected() {
   for (int i = 0; i < size; i++) {
     if (matrix[i][i] != 0) return false;
@@ -96,6 +85,25 @@ bool Graph::IsUndirected() {
     }
   }
   return true;
+}
+
+bool Graph::CheckConnected() {
+  for (int i = 0; i < size; i++) {
+    vector<int> visited(size, false);
+    Traverse(visited, i);
+    for (int j = 0; j < size; j++) {
+      if (!visited[j]) return false;
+    }
+  }
+  return true;
+}
+
+void Graph::Traverse(vector<int> &visited, int start) {
+  if (visited[start]) return;
+  visited[start] = true;
+  for (int i = 0; i < size; i++) {
+    if (matrix[start][i] && !visited[i]) Traverse(visited, i);
+  }
 }
 
 void Graph::Print() {

@@ -39,6 +39,8 @@ vector<int> GraphAlgorithms::BreadthFirstSearch(Graph &graph,
   return res;
 }
 
+/*Dijkstra's algorithm*/
+
 int GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph, int vertex1,
                                                     int vertex2) {
   vector<int> dist(graph.size, INT_MAX);
@@ -54,6 +56,8 @@ int GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph, int vertex1,
   }
   return dist[vertex2];
 }
+
+/*FLoyd-Warshall algorithm*/
 
 vector<vector<int>> GraphAlgorithms::GetShortestPathBetweenAllVertices(
     Graph &graph) {
@@ -83,6 +87,8 @@ int GraphAlgorithms::GetMinDistance(vector<int> dist, vector<bool> visited) {
   return idx;
 }
 
+/*Prim's alogrithm*/
+
 vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
   vector<bool> visited(graph.size, false);
   vector<int> dist(graph.size, INT_MAX);
@@ -105,6 +111,8 @@ vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
   }
   return res;
 }
+
+/*Ant colony method*/
 
 GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
     Graph &graph) {
@@ -233,4 +241,135 @@ vector<int> GraphAlgorithms::ShiftPath(vector<int> path) {
   for (int i = idx; i > 0; i--) res.push_back(path[i]);
   for (int i = n - 1; i >= idx; i--) res.push_back(path[i]);
   return res;
+}
+
+/*Brute force method*/
+
+GraphAlgorithms::TsmResult GraphAlgorithms::BruteForceAlgorithm(Graph &graph) {
+  vector<bool> visited(graph.size, false);
+  vector<int> path;
+  visited[0] = true;
+  path.push_back(0);
+  TsmResult result;
+  result.distance = INT_MAX;
+  BruteForce(graph, 0, 0, path, visited, result);
+  result.vertices.push_back(result.vertices[0]);
+  result.distance =
+      (result.distance != INT_MAX && result.distance ? result.distance : -1);
+  return result;
+}
+
+void GraphAlgorithms::BruteForce(Graph &graph, int current, double cost,
+                                 vector<int> &path, vector<bool> &visited,
+                                 TsmResult &result) {
+  if ((int)path.size() == graph.size) {
+    cost += graph.matrix[current][0];
+    if (cost < result.distance) {
+      result.distance = cost;
+      result.vertices = path;
+    }
+    return;
+  }
+  for (int i = 0; i < graph.size; ++i) {
+    if (!visited[i] && graph.matrix[current][i] > 0) {
+      visited[i] = true;
+      path.push_back(i);
+      BruteForce(graph, i, cost + graph.matrix[current][i], path, visited,
+                 result);
+      visited[i] = false;
+      path.pop_back();
+    }
+  }
+}
+
+/*Branch and bound method*/
+
+GraphAlgorithms::TsmResult GraphAlgorithms::BranchAndBoundAlgorithm(
+    Graph &graph) {
+  vector<bool> visited(graph.size, false);
+  TsmResult result;
+  result.distance = INT_MAX;
+  result.vertices.resize(graph.size + 1);
+  std::vector<int> curr_path;
+  curr_path.assign(graph.size, -1);
+  int curr_bound = 0;
+  for (int i = 0; i < graph.size; ++i)
+    curr_bound += (FirstMin(graph, i, visited) + SecondMin(graph, i, visited));
+  curr_bound = (curr_bound & 1) ? curr_bound / 2 + 1 : curr_bound / 2;
+  visited[0] = true;
+  curr_path[0] = 0;
+  Rec(graph, curr_bound, 0, 1, curr_path, visited, result);
+  result.distance =
+      (result.distance != INT_MAX && result.distance ? result.distance : -1);
+  return result;
+}
+
+void GraphAlgorithms::CopyToFinalPath(Graph &graph, vector<int> &curr_path,
+                                      TsmResult &result) {
+  for (int i = 0; i < graph.size; ++i) result.vertices[i] = curr_path[i];
+  result.vertices[graph.size] = curr_path[0];
+}
+
+int GraphAlgorithms::FirstMin(Graph &graph, int i, vector<bool> &visited) {
+  int min = INT_MAX;
+  for (int k = 0; k < graph.size; ++k) {
+    if (visited[k] || i == k) continue;
+    if (graph.matrix[i][k] < min) min = graph.matrix[i][k];
+  }
+  return min;
+}
+
+int GraphAlgorithms::SecondMin(Graph &graph, int i, vector<bool> &visited) {
+  int first = INT_MAX;
+  int second = INT_MAX;
+  for (int k = 0; k < graph.size; ++k) {
+    if (visited[k] || i == k) continue;
+    if (graph.matrix[i][k] <= first) {
+      second = first;
+      first = graph.matrix[i][k];
+    } else if (graph.matrix[i][k] <= second && graph.matrix[i][k] != first) {
+      second = graph.matrix[i][k];
+    }
+  }
+  return second;
+}
+
+void GraphAlgorithms::Rec(Graph &graph, int curr_bound, int curr_weight,
+                          int level, vector<int> &curr_path,
+                          vector<bool> &visited, TsmResult &result) {
+  if (level == graph.size) {
+    if (graph.matrix[curr_path[level - 1]][curr_path[0]] != 0) {
+      int curr_res =
+          curr_weight + graph.matrix[curr_path[level - 1]][curr_path[0]];
+      if (curr_res < result.distance) {
+        CopyToFinalPath(graph, curr_path, result);
+        result.distance = curr_res;
+      }
+    }
+    return;
+  }
+  for (int i = 0; i < graph.size; ++i) {
+    if (graph.matrix[curr_path[level - 1]][i] != 0 && visited[i] == false) {
+      int temp = curr_bound;
+      curr_weight += graph.matrix[curr_path[level - 1]][i];
+      if (level == 1)
+        curr_bound -= ((FirstMin(graph, curr_path[level - 1], visited) +
+                        FirstMin(graph, i, visited)) /
+                       2);
+      else
+        curr_bound -= ((SecondMin(graph, curr_path[level - 1], visited) +
+                        FirstMin(graph, i, visited)) /
+                       2);
+      if (curr_bound + curr_weight < result.distance) {
+        curr_path[level] = i;
+        visited[i] = true;
+        Rec(graph, curr_bound, curr_weight, level + 1, curr_path, visited,
+            result);
+      }
+      curr_weight -= graph.matrix[curr_path[level - 1]][i];
+      curr_bound = temp;
+      visited.assign(visited.size(), false);
+      for (int j = 0; j <= level - 1; ++j) visited[curr_path[j]] = true;
+    }
+  }
 }

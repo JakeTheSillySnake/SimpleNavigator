@@ -39,12 +39,14 @@ class GraphAlgorithms {
 
   vector<vector<int>> GetLeastSpanninhTree(Graph &graph);
   TsmResult SolveTravelingSalesmanProblem(Graph &graph);
+  TsmResult BruteForceAlgorithm(Graph &graph);
+  TsmResult BranchAndBoundAlgorithm(Graph &graph);
 
  private:
-  // shortes path helper
+  // shortes path
   int GetMinDistance(vector<int> dist, vector<bool> visited);
 
-  // tsp ant colony helpers
+  // ant colony
   vector<double> GetNeigbourProbabilities(Graph &graph,
                                           vector<vector<double>> pheromones,
                                           int curr, vector<bool> visited);
@@ -56,6 +58,17 @@ class GraphAlgorithms {
   int GetNextVertex(vector<double> probabilites);
   int GetPathLength(Graph &graph, vector<int> path);
   vector<int> ShiftPath(vector<int> path);
+
+  // brute force
+  void BruteForce(Graph &graph, int current, double cost, vector<int> &path,
+                  vector<bool> &visited, TsmResult &result);
+
+  // branch and bound
+  void CopyToFinalPath(Graph &graph, vector<int> &curr_path, TsmResult &result);
+  int FirstMin(Graph &graph, int i, vector<bool> &visited);
+  int SecondMin(Graph &graph, int i, vector<bool> &visited);
+  void Rec(Graph &graph, int curr_bound, int curr_weight, int level,
+           vector<int> &curr_path, vector<bool> &visited, TsmResult &result);
 };
 
 #endif

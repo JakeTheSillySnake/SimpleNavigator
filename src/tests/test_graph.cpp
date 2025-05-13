@@ -54,8 +54,8 @@ TEST(test_Graph, upload_8) {
 
 TEST(test_Graph, export) {
   Graph graph;
-  int res = graph.LoadGraphFromFile("assets/graph_uw.txt");
-  res = graph.LoadGraphFromFile("assets/graph_big.txt");
+  int res = graph.LoadGraphFromFile("assets/graph_big.txt");
+  res = graph.LoadGraphFromFile("assets/graph_uw.txt");
   ASSERT_TRUE(res == 0);
   graph.ExportGraphToDot("test.dot");
   FILE *fptr = fopen("test.dot", "r");

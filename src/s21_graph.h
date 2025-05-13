@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,11 +20,14 @@ class Graph {
   ~Graph() { Clear(); }
   int LoadGraphFromFile(string filename);
   int ExportGraphToDot(string filename);
-  bool EdgeExists(int a, int b);
   bool IsUndirected();
+  bool CheckConnected();
   void Init(int n);
   void Clear();
   void Print();
+
+ private:
+  void Traverse(vector<int> &visited, int start);
 };
 
 #endif

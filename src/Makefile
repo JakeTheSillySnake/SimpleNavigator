@@ -39,7 +39,7 @@ test: clean s21_stack s21_queue s21_graph s21_graph_algorithms
 	$(FLAGS) tests/* $(LIBS) -o test.out
 	./test.out
 
-gcov_report: clean s21_graph_gcov s21_graph_algorithms_gcov
+gcov_report: clean s21_stack s21_queue s21_graph_gcov s21_graph_algorithms_gcov
 	$(FLAGS) tests/* --coverage $(LIBS) -o test.out
 	./test.out
 	lcov -t "./test.out" -exclude="*test*" -exclude="*.h" -exclude="*11*" -o report.info -c -d .
