@@ -7,8 +7,8 @@
 #include <random>
 #include <vector>
 
-#include "containers/s21_queue.h"
-#include "containers/s21_stack.h"
+#include "../containers/s21_queue.h"
+#include "../containers/s21_stack.h"
 #include "s21_graph.h"
 
 using namespace std;

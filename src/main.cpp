@@ -1,6 +1,6 @@
 #include <chrono>
 
-#include "s21_graph_algorithms.h"
+#include "graph/s21_graph_algorithms.h"
 
 using namespace std;
 using namespace chrono;

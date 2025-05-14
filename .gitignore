@@ -2,6 +2,10 @@
 *.d
 *.dot
 *vscode
+*dummy*
+*gcno
+*gcda
+*info
 
 # Compiled Object files
 *.slo

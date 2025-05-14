@@ -36,7 +36,7 @@ int Graph::LoadGraphFromFile(string filename) {
     }
   }
   input.close();
-  if (!CheckConnected()) error = DISCONNECTED;
+  if (!error && !CheckConnected()) error = DISCONNECTED;
   return error;
 }
 
@@ -89,10 +89,10 @@ bool Graph::IsUndirected() {
 
 bool Graph::CheckConnected() {
   for (int i = 0; i < size; i++) {
-    vector<int> visited(size, false);
-    Traverse(visited, i);
+    vector<int> visited1(size, false), visited2(size, false);
+    Traverse(visited1, i);
     for (int j = 0; j < size; j++) {
-      if (!visited[j]) return false;
+      if (!visited1[j] && !visited2[j]) return false;
     }
   }
   return true;
@@ -102,7 +102,8 @@ void Graph::Traverse(vector<int> &visited, int start) {
   if (visited[start]) return;
   visited[start] = true;
   for (int i = 0; i < size; i++) {
-    if (matrix[start][i] && !visited[i]) Traverse(visited, i);
+    if ((matrix[start][i] || matrix[i][start]) && !visited[i])
+      Traverse(visited, i);
   }
 }
 

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../s21_graph_algorithms.h"
+#include "../graph/s21_graph_algorithms.h"
 
 TEST(test_GraphAlgorithms, dfs) {
   Graph graph;
@@ -105,6 +105,10 @@ TEST(test_GraphAlgorithms, tsp_brute) {
   vector<int> compare = {0, 7, 4, 3, 9, 5, 2, 6, 1, 10, 8, 0};
   ASSERT_TRUE(res.vertices == compare);
   ASSERT_TRUE(res.distance == 253);
+
+  /*<----small graph for valgrind---->*/
+  /*graph.LoadGraphFromFile("assets/graph_du.txt");
+  algo.BruteForceAlgorithm(graph);*/
 }
 
 TEST(test_GraphAlgorithms, tsp_branch) {
@@ -119,4 +123,8 @@ TEST(test_GraphAlgorithms, tsp_branch) {
   graph.LoadGraphFromFile("assets/graph_uw2.txt");
   res = algo.BranchAndBoundAlgorithm(graph);
   ASSERT_TRUE(res.distance == -1);
+
+  /*<----small graph for valgrind---->*/
+  /*graph.LoadGraphFromFile("assets/graph_du.txt");
+  algo.BranchAndBoundAlgorithm(graph);*/
 }

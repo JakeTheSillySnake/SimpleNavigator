@@ -1,18 +1,18 @@
 #include "s21_graph_algorithms.h"
 
 vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph, int start_vertex) {
-  Stack<int> stack;
+  s21::stack<int> stack;
   vector<bool> visited(graph.size, false);
   vector<int> res;
-  stack.Push(start_vertex);
-  while (!stack.Empty()) {
-    int n = stack.Top();
-    stack.Pop();
+  stack.push(start_vertex);
+  while (!stack.empty()) {
+    int n = stack.top();
+    stack.pop();
     if (!visited[n]) {
       res.push_back(n);
       visited[n] = true;
       for (int i = graph.size - 1; i >= 0; i--) {
-        if (graph.matrix[n][i] && !visited[i]) stack.Push(i);
+        if (graph.matrix[n][i] && !visited[i]) stack.push(i);
       }
     }
   }
@@ -21,25 +21,25 @@ vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph, int start_vertex) {
 
 vector<int> GraphAlgorithms::BreadthFirstSearch(Graph &graph,
                                                 int start_vertex) {
-  Queue<int> queue;
+  s21::queue<int> queue;
   vector<bool> visited(graph.size, false);
   vector<int> res;
-  queue.Push(start_vertex);
-  while (!queue.Empty()) {
-    int n = queue.Front();
-    queue.Pop();
+  queue.push(start_vertex);
+  while (!queue.empty()) {
+    int n = queue.front();
+    queue.pop();
     if (!visited[n]) {
       res.push_back(n);
       visited[n] = true;
       for (int i = 0; i < graph.size; i++) {
-        if (graph.matrix[n][i] && !visited[i]) queue.Push(i);
+        if (graph.matrix[n][i] && !visited[i]) queue.push(i);
       }
     }
   }
   return res;
 }
 
-/*Dijkstra's algorithm*/
+/*<----Dijkstra's algorithm---->*/
 
 int GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph, int vertex1,
                                                     int vertex2) {
@@ -57,7 +57,7 @@ int GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph, int vertex1,
   return dist[vertex2];
 }
 
-/*FLoyd-Warshall algorithm*/
+/*<----FLoyd-Warshall algorithm---->*/
 
 vector<vector<int>> GraphAlgorithms::GetShortestPathBetweenAllVertices(
     Graph &graph) {
@@ -87,7 +87,7 @@ int GraphAlgorithms::GetMinDistance(vector<int> dist, vector<bool> visited) {
   return idx;
 }
 
-/*Prim's alogrithm*/
+/*<----Prim's alogrithm---->*/
 
 vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
   vector<bool> visited(graph.size, false);
@@ -112,7 +112,7 @@ vector<vector<int>> GraphAlgorithms::GetLeastSpanninhTree(Graph &graph) {
   return res;
 }
 
-/*Ant colony method*/
+/*<----Ant colony method---->*/
 
 GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
     Graph &graph) {
@@ -243,7 +243,7 @@ vector<int> GraphAlgorithms::ShiftPath(vector<int> path) {
   return res;
 }
 
-/*Brute force method*/
+/*<----Brute force method---->*/
 
 GraphAlgorithms::TsmResult GraphAlgorithms::BruteForceAlgorithm(Graph &graph) {
   vector<bool> visited(graph.size, false);
@@ -282,7 +282,7 @@ void GraphAlgorithms::BruteForce(Graph &graph, int current, double cost,
   }
 }
 
-/*Branch and bound method*/
+/*<----Branch and bound method---->*/
 
 GraphAlgorithms::TsmResult GraphAlgorithms::BranchAndBoundAlgorithm(
     Graph &graph) {

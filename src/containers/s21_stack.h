@@ -1,14 +1,20 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include <initializer_list>
 #include <iostream>
+#include <type_traits>  // find args... type
+#include <utility>
+
+#define TYPE_S "Argument is not a suitable value."
 
 using namespace std;
 
+namespace s21 {
 template <class T>
-class Stack {
+class stack {
  public:
-  // Stack member types
+  // stack member types
   using value_type = T;
   using reference = T&;
   using const_reference = const T&;
@@ -21,37 +27,35 @@ class Stack {
   int s_size;
 
  public:
-  Stack() : head(NULL), arr(NULL), s_size(0U) {}
-  ~Stack() {
-    if (arr) delete[] arr;
-  }
+  // constructors
+  stack() : head(NULL), arr(NULL), s_size(0U) {}
+  stack(std::initializer_list<value_type> const& items);
+  stack(const stack& s);       // copy
+  stack(stack&& s);            // move
+  ~stack();                    // destructor
+  stack operator=(stack&& s);  // op overload to move an object
 
-  const_reference Top() { return *head; }
-  bool Empty() { return s_size == 0; }
+  // element access
+  const_reference top();
 
-  void Push(const_reference value) {
-    value_type* t_arr = arr;
-    arr = new value_type[s_size + 1];
-    for (int i = 0; i < s_size; i++) {
-      arr[i] = t_arr[i];
-    }
-    arr[s_size] = value;
-    head = &arr[s_size];
-    ++s_size;
-    delete[] t_arr;
-  }
+  // capacity
+  bool empty();
+  size_type size();
 
-  value_type Pop() {
-    value_type* t_arr = arr;
-    value_type tmp = arr[s_size - 1];
-    arr = new value_type[s_size--];
-    for (int i = 0; i < s_size; i++) {
-      arr[i] = t_arr[i];
-    }
-    head = &arr[s_size - 1];
-    delete[] t_arr;
-    return tmp;
+  // modifiers;
+  void push(const_reference value);
+  void pop();
+  void swap(stack& other);
+
+  // param packs
+  template <typename... Args>
+  void insert_many_front(Args&&... args);
+
+  void print() {
+    for (int i = 0; i < s_size; i++) cout << arr[i] << " ";
+    cout << endl;
   }
 };
-
+}  // namespace s21
+#include "s21_stack.ipp"
 #endif

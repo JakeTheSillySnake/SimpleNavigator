@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../s21_graph.h"
+#include "../graph/s21_graph.h"
 
 TEST(test_Graph, upload_1) {
   Graph graph;
@@ -54,8 +54,8 @@ TEST(test_Graph, upload_8) {
 
 TEST(test_Graph, export) {
   Graph graph;
-  int res = graph.LoadGraphFromFile("assets/graph_big.txt");
-  res = graph.LoadGraphFromFile("assets/graph_uw.txt");
+  int res = graph.LoadGraphFromFile("assets/graph_uw.txt");
+  res = graph.LoadGraphFromFile("assets/graph_big.txt");
   ASSERT_TRUE(res == 0);
   graph.ExportGraphToDot("test.dot");
   FILE *fptr = fopen("test.dot", "r");
