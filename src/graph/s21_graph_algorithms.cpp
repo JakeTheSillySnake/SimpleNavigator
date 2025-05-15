@@ -80,7 +80,7 @@ vector<vector<int>> GraphAlgorithms::GetShortestPathBetweenAllVertices(
 }
 
 int GraphAlgorithms::GetMinDistance(vector<int> dist, vector<bool> visited) {
-  int min = INT_MAX, idx;
+  int min = INT_MAX, idx = 0;
   for (int i = 0; i < (int)dist.size(); i++) {
     if (!visited[i] && dist[i] <= min) min = dist[i], idx = i;
   }
@@ -223,7 +223,7 @@ int GraphAlgorithms::GetNextVertex(vector<double> probabilites) {
   return n - 1;
 }
 
-int GraphAlgorithms::GetPathLength(Graph &graph, vector<int> path) {
+int GraphAlgorithms::GetPathLength(const Graph &graph, vector<int> path) {
   int len = 0;
   int n = path.size();
   for (int i = 0; i < n - 1; i++) {
@@ -304,13 +304,15 @@ GraphAlgorithms::TsmResult GraphAlgorithms::BranchAndBoundAlgorithm(
   return result;
 }
 
-void GraphAlgorithms::CopyToFinalPath(Graph &graph, vector<int> &curr_path,
+void GraphAlgorithms::CopyToFinalPath(const Graph &graph,
+                                      const vector<int> &curr_path,
                                       TsmResult &result) {
   for (int i = 0; i < graph.size; ++i) result.vertices[i] = curr_path[i];
   result.vertices[graph.size] = curr_path[0];
 }
 
-int GraphAlgorithms::FirstMin(Graph &graph, int i, vector<bool> &visited) {
+int GraphAlgorithms::FirstMin(const Graph &graph, int i,
+                              const vector<bool> &visited) {
   int min = INT_MAX;
   for (int k = 0; k < graph.size; ++k) {
     if (visited[k] || i == k) continue;
@@ -319,7 +321,8 @@ int GraphAlgorithms::FirstMin(Graph &graph, int i, vector<bool> &visited) {
   return min;
 }
 
-int GraphAlgorithms::SecondMin(Graph &graph, int i, vector<bool> &visited) {
+int GraphAlgorithms::SecondMin(const Graph &graph, int i,
+                               const vector<bool> &visited) {
   int first = INT_MAX;
   int second = INT_MAX;
   for (int k = 0; k < graph.size; ++k) {
@@ -327,7 +330,7 @@ int GraphAlgorithms::SecondMin(Graph &graph, int i, vector<bool> &visited) {
     if (graph.matrix[i][k] <= first) {
       second = first;
       first = graph.matrix[i][k];
-    } else if (graph.matrix[i][k] <= second && graph.matrix[i][k] != first) {
+    } else if (graph.matrix[i][k] <= second) {
       second = graph.matrix[i][k];
     }
   }

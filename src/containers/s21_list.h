@@ -22,8 +22,8 @@ class list {
     node_base* prev;
     T data;
   };
-  node_base* head;
-  node_base* tail;
+  node_base* head = nullptr;
+  node_base* tail = nullptr;
 
   // inner iterator classes;
   class ListIterator;

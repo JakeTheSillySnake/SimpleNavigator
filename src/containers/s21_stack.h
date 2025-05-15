@@ -20,11 +20,11 @@ class stack {
   using const_reference = const T&;
   using size_type = size_t;
 
-  value_type* head;
+  value_type* head = nullptr;
 
  private:
-  value_type* arr;
-  int s_size;
+  value_type* arr = nullptr;
+  int s_size = 0;
 
  public:
   // constructors

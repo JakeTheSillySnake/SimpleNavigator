@@ -16,7 +16,7 @@ class Graph {
   int size = 0;
 
   Graph() { Graph(0); }
-  Graph(int n) { Init(n); }
+  explicit Graph(int n) { Init(n); }
   ~Graph() { Clear(); }
   int LoadGraphFromFile(string filename);
   int ExportGraphToDot(string filename);

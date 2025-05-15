@@ -56,7 +56,7 @@ class GraphAlgorithms {
   vector<vector<double>> UpdateDeltaPheromones(
       vector<vector<double>> deltaPheromones, vector<int> path, int len);
   int GetNextVertex(vector<double> probabilites);
-  int GetPathLength(Graph &graph, vector<int> path);
+  int GetPathLength(const Graph &graph, vector<int> path);
   vector<int> ShiftPath(vector<int> path);
 
   // brute force
@@ -64,9 +64,10 @@ class GraphAlgorithms {
                   vector<bool> &visited, TsmResult &result);
 
   // branch and bound
-  void CopyToFinalPath(Graph &graph, vector<int> &curr_path, TsmResult &result);
-  int FirstMin(Graph &graph, int i, vector<bool> &visited);
-  int SecondMin(Graph &graph, int i, vector<bool> &visited);
+  void CopyToFinalPath(const Graph &graph, const vector<int> &curr_path,
+                       TsmResult &result);
+  int FirstMin(const Graph &graph, int i, const vector<bool> &visited);
+  int SecondMin(const Graph &graph, int i, const vector<bool> &visited);
   void Rec(Graph &graph, int curr_bound, int curr_weight, int level,
            vector<int> &curr_path, vector<bool> &visited, TsmResult &result);
 };

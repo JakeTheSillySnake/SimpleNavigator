@@ -43,7 +43,6 @@ void cont();
 int main() {
   cout << "\033[2J\033[1;1H";
   cout << FGRN("Welcome!") << endl;
-  string in;
   Graph graph;
   importGraph(graph);
   beginLoop(graph);

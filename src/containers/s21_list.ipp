@@ -140,12 +140,13 @@ void list<T>::push_back(const_reference value) noexcept {
 
 template <typename T>
 void list<T>::pop_back() noexcept {
+  if (!tail) return;
   if (tail->prev) {
     node_base* tmp = tail->prev;
     delete tail;
     tail = tmp;
     tail->next = NULL;
-  } else if (tail) {
+  } else {
     delete tail;
     tail = NULL;
     head = NULL;
@@ -170,12 +171,13 @@ void list<T>::push_front(const_reference value) noexcept {
 
 template <typename T>
 void list<T>::pop_front() noexcept {
+  if (!head) return;
   if (head->next) {
     node_base* tmp = head->next;
     delete head;
     head = tmp;
     head->prev = NULL;
-  } else if (head) {
+  } else {
     delete head;
     head = NULL;
     tail = NULL;
@@ -249,7 +251,7 @@ void list<T>::splice(const_iterator pos, list& other) {
 
 template <typename T>
 void list<T>::reverse() noexcept {
-  iterator iter;
+  iterator iter = begin();
   iter.m_ptr = tail;
   for (auto i = this->begin(), j = iter, size = 0; size * 2 < (int)this->size();
        i++, j--, size++) {
