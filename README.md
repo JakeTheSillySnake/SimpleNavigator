@@ -3,90 +3,129 @@ _Last updated May 2025_
 
 ## Introduction
 
-This is the C++20 & CLI implementation of s21_graph & s21_graph_algorithms libraries. Below is the original version of the task.
+This is the C++20 & CLI implementation of s21_graph & s21_graph_algorithms libraries.
 
-Within this problem, all graphs must meet the following requirements:
+To be used within the app, graphs must meet the following requirements:
 - Edge weights are natural numbers only.
+  
 - There may be loops.
 - Weights can be different on all edges.
 - Only a non-zero connected graph.
 
-## Part 1. Depth- and Breadth-first search 
+To be loaded from a file, a graph must be represented as an adjacency matrix. On the first line write the number of vertices, starting from the second line set the weights of the edges (0 if there is no edge):
 
-Implementation of the s21_graph library:
+```
+11
+0   29  20  21  16  31  100 12  4   31  18
+29  0   15  29  28  40  72  21  29  41  12
+20  15  0   15  14  25  81  9   23  27  13
+21  29  15  0   4   12  92  12  25  13  25
+16  28  14  4   0   16  94  9   20  16  22
+31  40  25  12  16  0   95  24  36  3   37
+100 72  81  92  94  95  0   90  101 99  84
+12  21  9   12  9   24  90  0   15  25  13
+4   29  23  25  20  36  101 15  0   35  18
+31  41  27  13  16  3   99  25  35  0   38
+18  12  13  25  22  37  84  13  18  38  0
+```
 
-* Make it as a static library (s21_graph).
+After loading, graphs can be exported as DOT files to be used in special programs, such as **Graphviz**. For example, an undirected graph may be represented like this:
+
+```dot
+graph graphname {
+    a -- b;
+    b -- c;
+    b -- d;
+}
+```
+
+And directed graph -- like this:
+
+```dot
+digraph graphname {
+     a -> b;
+     b -> c;
+     b -> d;
+}
+```
   
-* The library must be represented as a `Graph` class that stores information about the graph using an **adjacency matrix**. The dimensionality of the adjacency matrix should be set dynamically when initializing the graph (when loading it from a file).
-* The program must be built with Makefile which contains standard set of targets for GNU-programs: all, clean, test, s21_graph.
-*Prepare full coverage of the `Graph` class methods with unit-tests.
-* The class `Graph` must contain at least the following public methods:
-    + `LoadGraphFromFile(string filename)` — loading a graph from a file in the adjacency matrix format.
+## Installation & Running
 
-    + `ExportGraphToDot(string filename)`- exporting a graph to a dot file (see materials).
+### Prerequisites
 
-Implementation of the s21_graph_algorithms library:
+Correct compilation and running of the program depends on other utilities and libraries. Check that you have their latest versions before proceeding: 
 
-* Make it as a static library (s21_graph_algorithms).
+| Compilation targets | Utilities |
+| ------------------- | --------- |
+| App Compilation & Running | gcc, make |
+| Testing | GTest library |
+| GCOV Report | gcov, lcov |
+| Leaks Check | valgrind |
 
-* The library must be represented as a ` GraphAlgorithms ` class that stores the implementation of algorithms on graphs. The class `GraphAlgorithms` itself must not know anything about the internal representation of the graph from the class `Graph`. To interact with graph data, the class `GraphAlgorithms` can only use the public methods and properties provided by the `Graph` class. 
-* Add to the Makefile s21_graph_algorithms target. 
-* Prepare full coverage of the `GraphAlgorithms` class methods with unit-tests.
-* The class ` GraphAlgorithms ` must contain at least the following public methods:
-    + `DepthFirstSearch(Graph &graph, int start_vertex)` — a *non-recursive* depth-first search in the graph from a given vertex. The function should return an array that contains the traversed vertices in the order they were traversed. When implementing this function, you must use the *self-written* data structure **stack**, which should be previously made as a separate static library.
-  
-    + `BreadthFirstSearch(Graph &graph, int start_vertex)` — breadth-first search in the graph from a given vertex. The function should return an array that contains the traversed vertices in the order they were traversed. When implementing this function, you must use the *self-written* data structure **queue**, which should be previously made as a separate static library.
-* It is necessary to adapt previously created *self-written* helper classes `Stack` and `Queue` and implement interfaces for them in C++.
+</br>
 
-## Part 2. Finding the shortest paths in a graph
+### Setup
 
-* Add two new methods to the `GraphAlgorithms` class:
-  
-    + `GetShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2)` — searching for the shortest path between two vertices in a graph using *Dijkstra's algorithm*. The function accepts as input the numbers of two vertices and returns a numerical result equal to the smallest distance between them.
-  
-    + `GetShortestPathsBetweenAllVertices(Graph &graph)` — searching for the shortest paths between all pairs of vertices in a graph using the *Floyd-Warshall algorithm*. As a result, the function returns the matrix of the shortest paths between all vertices of the graph.
+Download or clone (`git clone <link_to_git_folder>`) the source repository to where you can easily find it. Then type and run the following commands in the terminal: 
 
-## Part 3. Finding the minimum spanning tree
+1. `cd <path_to_git_folder>/src`
 
-* Add a new method to the `GraphAlgorithms` class:
-  
-    + `GetLeastSpanningTree(Graph &graph)` — searching for the minimal spanning tree in a graph using *Prim's algorithm*. As a result, the function should return the adjacency matrix for the minimal spanning tree.
+2. `make app`
 
-## Part 4. Traveling salesman problem
+If there are errors, you're likely missing some packages. Check __Prerequisites__.
 
-* Add a new method to the `GraphAlgorithms` class:
-  
-    + `SolveTravelingSalesmanProblem(Graph &graph)` — solving the traveling salesman's problem using the *ant colony algorithm*.
-You need to find the shortest path that goes through all vertices of the graph at least once, followed by a return to the original vertex. As a result, the function should return the `TsmResult` structure described below:
-    ```cpp
-    struct TsmResult {
-        int* vertices;    // an array with the route you are looking for (with the vertex traverse order). Instead of int* you can use std::vector<int>
-        double distance;  // the length of this route
-    }
-    ``` 
+</br>
 
-*If it is impossible to solve the problem with a given graph, output an error.*
+### Usage
 
-## Part 5. Console interface
+The console interface provides the following functionality:
 
-* You need to write the main program, which is a console application for testing the functionality of the implemented s21_graph and s21_graph_algorithms libraries.
+1. Load the graph from a file.
    
-* The console interface must provide the following functionality:
-    1. Load the original graph from a file.
-   
-    2. Traverse the graph in breadth and print the result to the console.   
-    3. Traverse the graph in depth and print the result to the console.
-    4. Find the shortest path between any two vertices and print the result to the console.
-    5. Find the shortest paths between all pairs of vertices in the graph and print the result matrix to the console.
-    6. Search for the minimum spanning tree in the graph and print the resulting adjacency matrix to the console.
-    7. Solve the Salesman problem, with output of the resulting route and its length to the console.
+3. Export the graph to DOT.
+2. Traverse the graph in breadth and print the result to the console.   
+3. Traverse the graph in depth and print the result to the console.
+4. Find the shortest path between any two vertices and print the result to the console.
+5. Find the shortest paths between all pairs of vertices in the graph and print the result matrix to the console.
+6. Search for the minimum spanning tree in the graph and print the resulting adjacency matrix to the console.
+7. Solve the Traveling Salesman problem, with output of the resulting route and its length to the console.
+8. Solve the Traveling Salesman problem N times using three different methods and print the results of time measurement.
+9. Exit.
 
-## Part 6. Comparison of methods for solving the traveling salesman problem
+## Structure & Testing
 
-* It is necessary to choose two additional algorithms to solve the traveling salesman problem and implement them as methods of the `GraphAlgorithms` class.
+The **s21_graph** library is represented as a `Graph` class that stores information about the graph using an **adjacency matrix** -- its dimensions are set dynamically when the graph is loaded from a file. The `Graph` class handles I/O using two methods:
++ `LoadGraphFromFile(string filename)` — loading a graph from a file in the adjacency matrix format.
+
++ `ExportGraphToDot(string filename)`- exporting a graph to a DOT file.
+
+The **s21_graph_algorithms** library is represented as a `GraphAlgorithms` class that stores the implementation of algorithms on graphs. It contains the following methods:
++ `DepthFirstSearch(Graph &graph, int start_vertex)` — a *non-recursive* depth-first search in the graph from a given vertex. The function returns an array that contains the traversed vertices in the order they were traversed and uses the *self-written* data structure **stack**.
   
-* Add to the console interface the ability to perform a comparison of  speed of the three algorithms (the ant colony algorithm and two randomly selected algorithms):
-    + The study starts for a graph that was previously loaded from a file.
-  
-    + As part of the study you need to keep track of the time it took to solve the salesman's problem `N` times in a row, by each of the algorithms. Where `N` is set from the keyboard.
-    + The results of the time measurement must be displayed in the console.
++ `BreadthFirstSearch(Graph &graph, int start_vertex)` — breadth-first search in the graph from a given vertex. The function returns an array that contains the traversed vertices in the order they were traversed and uses the *self-written* data structure **queue**, which is based on the structure **list**.
++ `GetShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2)` — searches for the shortest path between two vertices in a graph using *Dijkstra's algorithm*. The function accepts as input the numbers of two vertices and returns a numerical result equal to the smallest distance between them.
++ `GetShortestPathsBetweenAllVertices(Graph &graph)` — searches for the shortest paths between all pairs of vertices in a graph using the *Floyd-Warshall algorithm*. As a result, the function returns the matrix of the shortest paths between all vertices of the graph.
++ `GetLeastSpanningTree(Graph &graph)` — searches for the minimal spanning tree in a graph using *Prim's algorithm*. As a result, the function returns the adjacency matrix for the minimal spanning tree.
++ `SolveTravelingSalesmanProblem(Graph &graph)` — solves the traveling salesman's problem using the *ant colony algorithm*. As a result, the function returns the `TsmResult` structure described below:
+```cpp
+struct TsmResult {
+  std::vector<int> vertices; // an array with the route you are looking for (with the vertex traverse order).
+  double distance; // the length of this route
+}
+``` 
++ `BruteForceAlgorithm(Graph &graph)` — solves the traveling salesman's problem using the *brute force method*. As a result, the function returns the `TsmResult` structure.
++  `BranchAndBoundAlgorithm(Graph &graph)` — solves the traveling salesman's problem using the *branch and bound method*. As a result, the function returns the `TsmResult` structure.
+
+The program was made using C++20 language and standard libraries. The source code for self-written containers can be found in `src/containers`. The graph and container libraries can be tested with GTest: 
+
+1. To run tests: `make test`
+
+2. To display test coverage: `make gcov_report`
+
+3. To check for leaks: `make valgrind` (can take a long time due to algorithm testing; see comments in `src/tests/test_algorithms.cpp`)
+
+NOTE: the files in `src/assets` are necessary for testing. Please don't edit or delete them.
+
+## P.s.
+
+If you wish to suggest an improvement or report a bug, contact me __@ginzburg_jake (Telegram) or JakeTheSillySnake (GitHub)__.
